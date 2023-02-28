@@ -166,7 +166,7 @@ function Export-Certificate {
     )
 
     $path = Read-Host "Enter the path to save the certificate"
-    $password = Read-Host "Enter the password for the
+    $password = Read-Host "Enter the password for the"
     Export-PfxCertificate -Cert cert:\CurrentUser\My\$CertPath -FilePath $path -Password (ConvertTo-SecureString $password -AsPlainText -Force)
 }
 
