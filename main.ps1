@@ -30,13 +30,9 @@ param(
     [alias("g")]
     [switch]$generate,
 
-
-    #import certificat in local computer
-    # here user can define store location
     [alias("i")]
     [switch]$import,
 
-    #export certificat
     #user will choose save path
     [alias("p")]
     [string]$path,
@@ -47,7 +43,7 @@ param(
 
 )
 
-# Condition pour le paramètre -c
+#Condition pour le paramètre -c
 if([string]::IsNullOrEmpty($certificat)) {
     $certificat = "certificat.pfx"
 }
@@ -62,27 +58,31 @@ if(!$version) {
     $version = $false
 }
 
+# Condition pour le paramètre -g
 if(!$generate) {
     $generate = $false
 }
-# Condition pour le paramètre -i
+
 if(!$import) {
-    $import 
+    $import = $false
 }
 
-# Condition pour le paramètre -e
-if(!$export) {
-    $export = $false
-}
+
 
 
 #function to recursively sign every file in folder
 function signRecursively {
     param(
         [string]$certificat,
-        [string]$sign
+        [string]$sign,
+        [string]$authority
     )
-
+    if (!$authority) {
+        $authority = "Cert:\LocalMachine\Root"
+    }
+    if(!$certificat) {
+        $certificat = "certificat.pfx"
+    }
 
         # Spécifiez le chemin d'accès au dossier contenant les fichiers PS1 à signer
     $folderPath = "$sign"
@@ -92,7 +92,7 @@ function signRecursively {
 
     # Pour chaque fichier PS1, signer numériquement le script avec le certificat spécifié
     foreach ($file in $files) {
-        Set-AuthenticodeSignature -FilePath $file.FullName -Certificate (Get-ChildItem -Path Cert:\LocalMachine\My\$certificat)
+        Set-AuthenticodeSignature -FilePath $file.FullName -Certificate (Get-ChildItem -Path "Cert:\LocalMachine\My" | Where-Object {$_.Subject -eq "CN=$certificat"})
     }
     
 }
@@ -112,6 +112,8 @@ function certifGenerate {
 
     $cert = New-SelfSignedCertificate -Type CodeSigningCert -DnsName "$certificat" -CertStoreLocation Cert:\LocalMachine\My -NotAfter (Get-Date).AddYears(1)
     Export-Certificate -Cert $cert -FilePath "$path\$certificat"
+
+    write-host "Certificat $certificat généré dans $path avec succès"
     
     
     return $cert
@@ -138,6 +140,8 @@ function certifImport {
 
     Import-Certificate -FilePath "$path\$certificat" -CertStoreLocation "$authority"
 
+    Write-Host "Certificat $certificat situé dans $path importé avec succès dans $authority"
+
 
 }
 
@@ -154,15 +158,17 @@ elseif($version) {
     # Afficher la version du script
     Write-Host "Version du script: $version"
 }
-elseif($import) {
-    # Appeler la fonction de génération de certificat si l'argument -c est fourni
-    certifImport $authority $path $certificat
-}
 elseif($generate) {
     Write-Host "Generation de certificat"
     # Appeler la fonction de génération de certificat si l'argument -c est fourni
     certifGenerate $certificat $path
 }
+elseif($import) {
+    Write-Host "Import du certificat"
+    # Appeler la fonction de génération de certificat si l'argument -c est fourni
+    certifImport -authority $authority -path $path -certificat $certificat
+}
+
 else {
     # Afficher un message d'erreur si aucun argument n'est fourni
     Write-Host "Aucun argument fourni. Utilisez -help pour afficher l'aide."
