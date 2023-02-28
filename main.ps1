@@ -69,7 +69,7 @@ param(
 
     #get script version
     [alias("v")]
-    [switch]$version = "Version 0.0.1",
+    [string]$version = "Version 0.0.1",
 
     #output path
     [alias("o")]
