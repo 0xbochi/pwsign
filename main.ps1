@@ -1,3 +1,4 @@
+
 param(
     #folder to sign
     [alias("s")]
@@ -92,6 +93,7 @@ function signRecursively {
 
     #sign with the recursive way
     if($recursive){
+    Write-Host "wrong way"
         # Récupérer la liste de tous les fichiers PS1 dans le dossier et ses sous-dossiers
         $files = Get-ChildItem -Path $folderPath -Recurse -Filter "*.ps1"
 
@@ -103,6 +105,10 @@ function signRecursively {
 
     }else{
         #sign single way
+        write-host "here we are "
+        write-host $path
+        write-host $certificat
+        write-host $recursive
         Set-AuthenticodeSignature -FilePath $path -Certificate (Get-ChildItem -Path "Cert:\LocalMachine\My" | Where-Object {$_.Subject -eq "CN=$certificat"})
     }
     
@@ -181,15 +187,17 @@ elseif($import) {
     certifImport -authority $authority -path $path -certificat $certificat
 }
 
+
 elseif($sign) {
     Write-Host "Signature en cours..."
     # Appeler la fonction de génération de certificat si l'argument -c est fourni
-    certifImport -authority $authority -path $path -certificat $certificat
+    signRecursively -certificat $certificat -path $path -authority $authority
 }
 
 else {
     # Afficher un message d'erreur si aucun argument n'est fourni
     Write-Host "Aucun argument fourni. Utilisez -help pour afficher l'aide."
 }
+
 
 
