@@ -1,7 +1,7 @@
 param(
     #folder to sign
     [alias("s")]
-    [string]$sign,
+    [switch]$sign,
     
     #sign everything in folder recursively
     [alias("r")]
@@ -67,6 +67,9 @@ if(!$import) {
     $import = $false
 }
 
+if(!$sign) {
+    $sign = $false
+}
 
 
 
@@ -74,7 +77,7 @@ if(!$import) {
 function signRecursively {
     param(
         [string]$certificat,
-        [string]$sign,
+        [string]$path,
         [string]$authority
     )
     if (!$authority) {
@@ -84,18 +87,27 @@ function signRecursively {
         $certificat = "certificat.pfx"
     }
 
-        # Spécifiez le chemin d'accès au dossier contenant les fichiers PS1 à signer
-    $folderPath = "$sign"
+    # Spécifiez le chemin d'accès au dossier contenant les fichiers PS1 à signer
+    $folderPath = "$path"
 
-    # Récupérer la liste de tous les fichiers PS1 dans le dossier et ses sous-dossiers
-    $files = Get-ChildItem -Path $folderPath -Recurse -Filter "*.ps1"
+    #sign with the recursive way
+    if($recursive){
+        # Récupérer la liste de tous les fichiers PS1 dans le dossier et ses sous-dossiers
+        $files = Get-ChildItem -Path $folderPath -Recurse -Filter "*.ps1"
 
-    # Pour chaque fichier PS1, signer numériquement le script avec le certificat spécifié
-    foreach ($file in $files) {
-        Set-AuthenticodeSignature -FilePath $file.FullName -Certificate (Get-ChildItem -Path "Cert:\LocalMachine\My" | Where-Object {$_.Subject -eq "CN=$certificat"})
+        # Pour chaque fichier PS1, signer numériquement le script avec le certificat spécifié
+        foreach ($file in $files) {
+            Set-AuthenticodeSignature -FilePath $file.FullName -Certificate (Get-ChildItem -Path "Cert:\LocalMachine\My" | Where-Object {$_.Subject -eq "CN=$certificat"})
+        }
+
+
+    }else{
+        #sign single way
+        Set-AuthenticodeSignature -FilePath $path -Certificate (Get-ChildItem -Path "Cert:\LocalMachine\My" | Where-Object {$_.Subject -eq "CN=$certificat"})
     }
     
 }
+
 
 function certifGenerate {
     param(
@@ -165,6 +177,12 @@ elseif($generate) {
 }
 elseif($import) {
     Write-Host "Import du certificat"
+    # Appeler la fonction de génération de certificat si l'argument -c est fourni
+    certifImport -authority $authority -path $path -certificat $certificat
+}
+
+elseif($sign) {
+    Write-Host "Signature en cours..."
     # Appeler la fonction de génération de certificat si l'argument -c est fourni
     certifImport -authority $authority -path $path -certificat $certificat
 }
