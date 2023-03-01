@@ -109,7 +109,7 @@ function signRecursively {
         write-host $path
         write-host $certificat
         write-host $recursive
-        Set-AuthenticodeSignature -FilePath $path -Certificate (Get-ChildItem -Path "$authority" | Where-Object {$_.Subject -eq "CN=$certificat"})
+        Set-AuthenticodeSignature -FilePath $path -Certificate (Get-ChildItem -Path "Cert:\LocalMachine\My" | Where-Object {$_.Subject -eq "CN=$certificat"})
     }
     
 }
