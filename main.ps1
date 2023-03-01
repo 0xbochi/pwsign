@@ -85,7 +85,6 @@ function signRecursively {
 
     #sign with the recursive way
     if($recursive){
-    Write-Host "wrong way"
         # Récupérer la liste de tous les fichiers PS1 dans le dossier et ses sous-dossiers
         $files = Get-ChildItem -Path $folderPath -Recurse -Filter "*.ps1"
 
@@ -97,10 +96,6 @@ function signRecursively {
 
     }else{
         #sign single way
-        write-host "here we are "
-        write-host $path
-        write-host $certificat
-        write-host $recursive
         Set-AuthenticodeSignature -FilePath $path -Certificate (Get-ChildItem -Path "Cert:\LocalMachine\My" | Where-Object {$_.Subject -eq "CN=$certificat"})
     }
     
@@ -123,7 +118,7 @@ function certifGenerate {
     $cert = New-SelfSignedCertificate -Type CodeSigningCert -DnsName "$certificat" -CertStoreLocation Cert:\LocalMachine\My -NotAfter (Get-Date).AddYears(1)
     Export-Certificate -Cert $cert -FilePath "$path\$certificat"
 
-    write-host "Certificat $certificat généré dans $path avec succès"
+    write-host "Certificat $certificat généré dans $path avec succès" -ForegroundColor green
     
     
     return $cert
@@ -150,7 +145,7 @@ function certifImport {
 
     Import-Certificate -FilePath "$path\$certificat" -CertStoreLocation "$authority"
 
-    Write-Host "Certificat $certificat situé dans $path importé avec succès dans $authority"
+    Write-Host "Certificat $certificat situé dans $path importé avec succès dans $authority" -ForegroundColor green
 
 
 }
@@ -163,22 +158,22 @@ if($help) {
 }
 elseif($version) {
     # Afficher la version du script
-    Write-Host "Version du script: $version"
+    Write-Host "Version du script: 1.0.0" -ForegroundColor DarkBlue
 }
 elseif($generate) {
-    Write-Host "Generation de certificat"
+    Write-Host "Generation de certificat" -ForegroundColor green
     # Appeler la fonction de génération de certificat si l'argument -c est fourni
     certifGenerate $certificat $path
 }
 elseif($import) {
-    Write-Host "Import du certificat"
+    Write-Host "Import du certificat" -ForegroundColor green
     # Appeler la fonction de génération de certificat si l'argument -c est fourni
     certifImport -authority $authority -path $path -certificat $certificat
 }
 
 
 elseif($sign) {
-    Write-Host "Signature en cours..."
+    Write-Host "Signature en cours..." -ForegroundColor green
     # Appeler la fonction de génération de certificat si l'argument -c est fourni
     signRecursively -certificat $certificat -path $path -authority $authority
 }
