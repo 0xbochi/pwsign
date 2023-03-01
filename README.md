@@ -1,56 +1,56 @@
 ![](./.github/images/banner.png)
 
-Le script pwsign est un script PowerShell qui permet de signer numériquement des fichiers exécutables à l'aide d'un certificat. Il prend en charge la signature numérique de fichiers individuels ainsi que la signature de tous les fichiers d'un dossier et de ses sous-dossiers de manière récursive.
-Installation
+The pwsign script is a PowerShell script for digitally signing executable files using a certificate. It supports digital signing of individual files as well as signing all files in a folder and its subfolders recursively. Installation
 
-Pour utiliser le script pwsign, vous devez avoir PowerShell installé sur votre ordinateur. Le script ne nécessite pas d'installation supplémentaire.
+To use the pwsign script, you must have PowerShell installed on your computer. The script does not require any additional installation.
 
-## Utilisation
+## Usage
 
-Le script pwsign prend en charge les paramètres suivants :
+##### The pwsign script supports the following parameters:
 
-    -s ou --sign : Spécifie le fichier ou le dossier à signer numériquement.
-    -r ou --recursive : Spécifie que la signature numérique doit être appliquée à tous les fichiers d'un dossier et de ses sous-dossiers.
-    -c ou --certificat : Spécifie le nom du certificat à utiliser pour signer le fichier ou le dossier. Si ce paramètre n'est pas spécifié, le script utilise le certificat "certificat.pfx" par défaut.
-    -d ou --doc : Affiche la documentation du script.
-    -v ou --version : Affiche la version du script.
-    -g ou --generate : Génère un nouveau certificat.
-    -i ou --import : Importe un certificat.
-    -p ou --path : Spécifie le chemin d'accès où enregistrer ou importer le certificat.
-    -a ou --authority : Spécifie l'autorité de certification à utiliser pour l'importation du certificat. Si ce paramètre n'est pas spécifié, le script utilise l'autorité de certification "Cert:\LocalMachine\Root" par défaut.
+    -s or --sign: Specifies the file or folder to digitally sign.
+    -r or --recursive: Specifies that the digital signature should be applied to all files in a folder and its subfolders.
+    -c or --certificate: Specifies the name of the certificate to use to sign the file or folder. If this parameter is not specified, the script uses the default certificate "certificate.pfx".
+    -d or --doc: Displays the script documentation.
+    -v or --version : Displays the version of the script.
+    -g or --generate : Generate a new certificate.
+    -i or --import: Imports a certificate.
+    -p or --path: Specifies the path to save or import the certificate.
+    -a or --authority: Specifies the certificate authority to use for importing the certificate. If this parameter is not specified, the script uses the "Cert:\LocalMachine\Root" certificate authority by default.
 
-## Signature numérique de fichiers
 
-Pour signer numériquement un fichier ou un dossier, utilisez la commande suivante :
 
+#### Digital signature of files
+
+To digitally sign a file or folder, use the following command:
 ```
-.\pwsign.ps1 -s <chemin d'accès au fichier ou au dossier> -c <nom du certificat> -r
+.\pwsign.ps1 -s <path to file or folder> -c <name of certificate> -r <for recursive mode>
 ```
+This will digitally sign all files in the specified folder and its subfolders. If the -r argument is not specified, only the specified file will be signed.
 
-Cela signera numériquement tous les fichiers dans le dossier spécifié et ses sous-dossiers. Si l'argument -r n'est pas spécifié, seul le fichier spécifié sera signé.
-Génération de certificats
 
-Pour générer un nouveau certificat, utilisez la commande suivante :
+#### Generating certificates
 
+To generate a new certificate, use the following command:
 ```
-.\pwsign.ps1 -g -c <nom du certificat> -p <chemin d'accès>
+.\pwsign.ps1 -g -c <name of certificate> -p <path to file or folder to store> 
 ```
+It will generate a new certificate with the specified name and save it locally on the computer.
 
-Cela générera un nouveau certificat avec le nom spécifié et l'enregistrera localement sur l'ordinateur.
-Importation de certificats
 
-Pour importer un certificat à partir d'un fichier PFX, utilisez la commande suivante :
+#### Importing certificates
 
+To import a certificate from a PFX file, use the following command:
 ```
-.\pwsign.ps1 -i -a <autorité de certification> -p <chemin d'accès> -c <nom du certificat>
+.\pwsign.ps1 -i -a <certification authority> -p <path> -c <certificate name>
 ```
+This will import the certificate into the specified certificate authority.
 
-Cela importera le certificat dans l'autorité de certification spécifiée.
 
 ## Support
 
-Si vous rencontrez des problèmes avec le script pwsign, veuillez créer une issue dans la section Issues de ce repository GitHub. Nous ferons de notre mieux pour vous aider à résoudre votre problème.
+If you are having problems with the pwsign script, please create an issue in the Issues section of this GitHub repository. We will do our best to help you resolve your issue.
 
-## Auteur
+## Author
 
-Le script pwsign a été écrit par Bochi Si vous avez des questions sur le script, n'hésitez pas à me contacter à bochi#6982.
+The pwsign script was written by Bochi If you have any questions about the script, feel free to contact me at bochi#6982.
