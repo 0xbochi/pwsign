@@ -1,0 +1,32 @@
+> Help 
+
+The pwsign script is a PowerShell script for digitally signing executable files using a certificate. It supports digital signing of individual files as well as signing all files in a folder and its subfolders recursively. Installation
+
+To use the pwsign script, you must have PowerShell installed on your computer. The script does not require any additional installation.
+
+=> Usage 
+* -s or --sign: Specifies the file or folder to digitally sign.
+* -r or --recursive: Specifies that the digital signature should be applied to all files in a folder and its subfolders.
+* -c or --certificate: Specifies the name of the certificate to use to sign the file or folder. If this parameter is not specified, the script uses the default certificate "certificate.pfx".
+* -d or --doc: Displays the script documentation.
+* -v or --version : Displays the version of the script.
+* -g or --generate : Generate a new certificate.
+* -i or --import: Imports a certificate.
+* -p or --path: Specifies the path to save or import the certificate.
+* -a or --authority: Specifies the certificate authority to use for importing the certificate. If this parameter is not specified, the script uses the "Cert:\LocalMachine\Root" certificate authority by default.
+
+=> Use it by default 
+
+* Generate and export your certificat
+./main.ps1 -g
+
+* Import your certificate
+./main.ps1 -i 
+
+* Sign your script folder recursively
+./main.ps1 -s -p "C:Path\to\your\folder" -r 
+
+or sign only one file
+./main.ps1 -s -p "C:Path\to\your\folder\script.ps1"
+
+Done :)

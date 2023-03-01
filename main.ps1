@@ -12,9 +12,6 @@ param(
     [alias("c")]
     [string]$certificat,
 
-    #Get documentation about pwsign script 
-    [alias("d")]
-    [switch]$doc,
 
     #Get help
     [switch]$help,
@@ -47,11 +44,6 @@ param(
 #Condition pour le paramètre -c
 if([string]::IsNullOrEmpty($certificat)) {
     $certificat = "certificat.pfx"
-}
-
-# Condition pour le paramètre -d
-if(!$doc) {
-    $doc = $false
 }
 
 # Condition pour le paramètre -v
@@ -163,28 +155,11 @@ function certifImport {
 
 }
 
-Write-Host @"
-:::::::::  :::       :::          :::::::: ::::::::::: ::::::::  ::::    ::: 
-:+:    :+: :+:       :+:         :+:    :+:    :+:    :+:    :+: :+:+:   :+:  
-+:+    +:+ +:+       +:+         +:+           +:+    +:+        :+:+:+  +:+   
-+#++:++#+  +#+  +:+  +#+         +#++:++#++    +#+    :#:        +#+ +:+ +#+    
-+#+        +#+ +#+#+ +#+                +#+    +#+    +#+   +#+# +#+  +#+#+#     
-#+#         #+#+# #+#+#          #+#    #+#    #+#    #+#    #+# #+#   #+#+#      
-###          ###   ###            ######## ########### ########  ###    ####  
-
-Signing your powershell scripts has never been easier
-----------------------------------------------------------------------------
-https://github.com/0xbochi/pwsign
-
-"@ -ForegroundColor blue
+Get-Content motd.txt | Write-Host -ForegroundColor blue
 
 if($help) {
     # Appeler la fonction qui affiche l'aide
-    Write-Host "Affichage de l'aide"
-}
-elseif($doc) {
-    # Appeler la fonction qui affiche la documentation
-    Write-Host "Affichage de la documentation"
+    Get-Content help.txt | Write-Host -ForegroundColor yellow
 }
 elseif($version) {
     # Afficher la version du script
