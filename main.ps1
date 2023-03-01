@@ -82,7 +82,7 @@ function signRecursively {
         [string]$authority
     )
     if (!$authority) {
-        $authority = "Cert:\LocalMachine\Root"
+        $authority = "Cert:\LocalMachine\My"
     }
     if(!$certificat) {
         $certificat = "certificat.pfx"
@@ -99,7 +99,7 @@ function signRecursively {
 
         # Pour chaque fichier PS1, signer numériquement le script avec le certificat spécifié
         foreach ($file in $files) {
-            Set-AuthenticodeSignature -FilePath $file.FullName -Certificate (Get-ChildItem -Path "Cert:\LocalMachine\My" | Where-Object {$_.Subject -eq "CN=$certificat"})
+            Set-AuthenticodeSignature -FilePath $file.FullName -Certificate (Get-ChildItem -Path "$authority" | Where-Object {$_.Subject -eq "CN=$certificat"})
         }
 
 
@@ -109,7 +109,7 @@ function signRecursively {
         write-host $path
         write-host $certificat
         write-host $recursive
-        Set-AuthenticodeSignature -FilePath $path -Certificate (Get-ChildItem -Path "Cert:\LocalMachine\My" | Where-Object {$_.Subject -eq "CN=$certificat"})
+        Set-AuthenticodeSignature -FilePath $path -Certificate (Get-ChildItem -Path "$authority" | Where-Object {$_.Subject -eq "CN=$certificat"})
     }
     
 }
