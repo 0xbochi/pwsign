@@ -11,7 +11,6 @@ To use the pwsign script, you must have PowerShell installed on your computer. T
     -s or --sign: Specifies the file or folder to digitally sign.
     -r or --recursive: Specifies that the digital signature should be applied to all files in a folder and its subfolders.
     -c or --certificate: Specifies the name of the certificate to use to sign the file or folder. If this parameter is not specified, the script uses the default certificate "certificate.pfx".
-    -d or --doc: Displays the script documentation.
     -v or --version : Displays the version of the script.
     -g or --generate : Generate a new certificate.
     -i or --import: Imports a certificate.
